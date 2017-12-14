@@ -39,10 +39,6 @@ class Session(object):
         rs = Response(self.protocol.get_command_output(shell_id, command_id))
         self.protocol.cleanup_command(shell_id, command_id)
         self.protocol.close_shell(shell_id)
-        if not isinstance(rs.std_err, str):
-            rs.std_err = rs.std_err.decode()
-        if not isinstance(rs.std_out, str):
-            rs.std_out = rs.std_out.decode()
         return rs
 
     def run_ps(self, script):
@@ -63,7 +59,7 @@ class Session(object):
         """
         # TODO prepare unit test, beautify code
         # if the msg does not start with this, return it as is
-        if msg.startswith("#< CLIXML\r\n"):
+        if msg.startswith(b"#< CLIXML\r\n"):
             # for proper xml, we need to remove the CLIXML part
             # (the first line)
             msg_xml = msg[11:]
